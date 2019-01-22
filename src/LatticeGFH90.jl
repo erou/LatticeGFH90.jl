@@ -1,4 +1,4 @@
-module LatticeGFH90.jl
+module LatticeGFH90
 
 import Nemo: FiniteField
 
