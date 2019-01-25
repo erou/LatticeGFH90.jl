@@ -1,0 +1,164 @@
+#######################################################################
+#
+# Basic functions
+#
+#######################################################################
+
+export make_zetas
+
+const H90_ELEMENTS = Dict{Tuple{Int, Int}, fq_nmod_poly}()
+const EMBEDDINGS = Dict{Tuple{Int, Int, Int}, Any}() # Any for the "embedding" type
+const ZETAS = Dict{Tuple{Int, Int}, nmod_poly}()
+
+"""
+    multiplicative_order(x::fq_nmod)
+
+Compute the multiplicative order of `x`.
+"""
+function multiplicative_order(x::fq_nmod)
+    N = Nemo.order(parent(x)) - 1
+    order = ZZ(1)
+    for (q, a) in Nemo.factor(N)
+        tmp = x^divexact(N, q^a)
+        while tmp != 1
+            order *= q
+            tmp = tmp^q
+        end
+    end
+    return order
+end
+
+"Return `true` is `x` is primitive."
+is_primitive(x::fq_nmod) = multiplicative_order(x) == order(parent(x)) - 1
+
+"""
+    divisors(n::Int)
+
+Compute a list of the divisors of `n`.
+"""
+function divisors(n::Int)
+
+    f = Primes.factor(n)
+
+    nb_factor = 1
+    for x in values(f)
+        nb_factor *= x + 1
+    end
+
+    A = fill(1, nb_factor)
+    stop = 1
+    for (q, a) in Primes.factor(n)
+        for j in 1:a
+            for k in 1:stop
+                A[j*stop + k] = q^j * A[k]
+            end
+        end
+        stop *= a+1
+    end
+    return A
+end
+
+"""
+make_zetas(p::Int, m::Int = 36)
+
+Compute the minimal polynomial of the root ``ζ_{p^d-1}`` for 
+all divisor ``d`` of `m`.
+"""
+function make_zetas(p::Int, m::Int = 36)
+    k, x = FiniteField(p, m, "x")
+    y = gen(k)
+    while !is_primitive(y)
+        y = rand(k)
+    end
+
+    for d in divisors(m)
+        ZETAS[(p, d)] = minpoly(y^(divexact(ZZ(p)^m-1, ZZ(p)^d-1)))
+    end
+end
+
+"""
+    nth_root(x::fq_nmod, n::Int)
+
+Compute the `n`-th root of `x`.
+"""
+function nth_root(x::fq_nmod, n::Int)
+    R, T = PolynomialRing(parent(x), "T")
+    P = T^n - x
+    L = linfactor(P)
+    return - coeff(L, 0)
+end
+
+# NOT WORKING FOR NOW
+"""
+    complete_zeta(A::tensor_algebra)
+
+Return the root ``ζ_{p^a-1})``, where ``a`` is the level of `A`.
+"""
+function complete_zeta(A::tensor_algebra)
+    p::Int = characteristic(A.L) 
+    l, a = degree(A), level(A)
+    K, Z = FiniteField(ZETAS[(p, a)], "Z")
+    z = change_basis_inverse(A.R, Z, Z^(divexact(ZZ(p)^a-1, l))) # /!\
+    return z
+end
+
+"""
+    coeff!(x::fq_nmod, j::Int, c::UInt)
+
+Set the `j`-th coeff of `x` to `c`.
+"""
+function coeff!(x::fq_nmod, j::Int, c::UInt)
+    ccall((:nmod_poly_set_coeff_ui, :libflint), Nothing,
+          (Ref{fq_nmod}, Int, UInt), x, j, c)
+end
+
+"""
+    scalar(x::tensor_element)
+
+View `x` as a scalar element.
+"""
+function scalar(x::tensor_element)
+    A = parent(x)
+    R = A.R
+    s = R()
+    for j in 0:level(A)-1
+        coeff!(s, j, coeff(coeff(x.elem, j), 0))
+    end
+    return s
+end
+
+
+"""
+    solve_h90(A::tensor_algebra)
+
+Solve H90* in `A` for the root generating the cyclotomic part of `A`.
+
+# Remark
+The solution ``α ∈  A`` is such that
+``α^l=(1 ⊗ ζ_{p^a-1})^a``, where ``a`` is the level of ``A``.
+"""
+function solve_h90(A::tensor_algebra)
+    g = _solve_h90(A)
+    l, a = degree(A), level(A)
+    c = scaler(g^l)
+    z = complete_zeta(A)^a # COMPLETE ZETA BUGGED FOR NOW!
+    r = nth_root(c^-1 * z, l)
+    return r * g
+end
+
+"""
+    compute_emb(a::fq_nmod, b::fq_nmod)
+
+Compute the embedding ``a\\mapsto b``.
+"""
+function compute_emb(a::fq_nmod, b::fq_nmod)
+    P = minpoly(a)
+    L = parent(a)
+    K, x = FiniteField(P, "x")
+    
+    g = change_basis_inverse(K, gen(L), a)
+    G = change_basis_direct(g, b)
+
+    f(z::fq_nmod) = change_basis_direct(z, G)
+    return f
+end
