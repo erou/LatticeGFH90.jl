@@ -38,4 +38,7 @@ function embed(K::FqNmodFiniteField, L::FqNmodFiniteField)
     pow = divexact((b-a)*ZZ(p)^(a+b) - b*ZZ(p)^b + a*ZZ(p)^a, (ZZ(p)^a-1)*l)
     z = (complete_zeta(Am)^pow)^-1
     HL = z * hm^(divexact(m, l))
+    f = derive_emb(hl, HL)
+    EMBEDDINGS[(p, l, m)] = f
+    return f
 end

@@ -33,3 +33,9 @@ $ gcc -shared AE.o h90.o minpoly.o tensor.o nth-root.o basis_change.o -o libembe
 
 If this does not work, it *might* be that you have to link `libembed` against the
 Flint version used by Nemo.
+
+## How to: experiment
+
+It is probably easier to experiment with the code by deleting the first and last
+line of the file `LatticeGFH90.jl` and by just `include("LatticeGFH90.jl")`, so
+that all functions are in the name space. 

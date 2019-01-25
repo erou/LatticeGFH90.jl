@@ -100,6 +100,9 @@ end
 degree(A::tensor_algebra) = degree(A.L)
 level(A::tensor_algebra) = degree(A.R)
 parent(x::tensor_element) = x.parent
+left(A::tensor_algebra) = A.L
+right(A::tensor_algebra) = A.R
+coeff(x::tensor_element, j::Int) = coeff(x.elem, j)
 
 ################################################################
 #

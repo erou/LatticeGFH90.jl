@@ -162,3 +162,25 @@ function compute_emb(a::fq_nmod, b::fq_nmod)
     f(z::fq_nmod) = change_basis_direct(z, G)
     return f
 end
+
+"""
+derive_emb(hl::tensor_element, HL::tensor_element)
+
+Compute the embedding sending the first coordinate of `hl` in the 
+base ``(1 ⊗ ζ_{l}^j)_j`` to the first coordinate of `HL` in the 
+base ``(1 ⊗ ζ_{m}^(jm/l)_j``.
+"""
+function derive_emb(hl::tensor_element, HL::tensor_element)
+    Al, Am = parent(hl), parent(HL)
+    l, m = degree(Al), degree(Am)
+    a = coeff(hl, 0)
+    b = left(Am)()
+    zm = gen(right(Am))
+    for j in 0:level(Am)-1
+        if coeff(HL, j) != 0
+            tmp = change_basis_inverse(right(Al), zm^j, zm^(divexact(m, l)))
+            b += coeff(HL, j)*coeff(tmp, 0)
+        end
+    end
+    return compute_emb(a, b)
+end

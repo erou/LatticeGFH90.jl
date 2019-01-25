@@ -1,10 +1,10 @@
-module LatticeGFH90
+#module LatticeGFH90
 
 using Nemo, Primes, Markdown
 
 import Base: show, *, ^, ==
 
-import Nemo: parent, order, degree
+import Nemo: parent, order, degree, coeff
 
 #########################################################################
 #
@@ -38,4 +38,4 @@ include("basic.jl")
 
 include("embeddings.jl")
 
-end
+#end
