@@ -4,7 +4,7 @@
 #
 #######################################################################
 
-export make_zetas
+export make_zetas_prim
 
 const H90_ELEMENTS = Dict{Tuple{Int, Int}, tensor_element}()
 const EMBEDDINGS = Dict{Tuple{Int, Int, Int}, Any}() # Any for the "embedding" type
@@ -59,12 +59,12 @@ function divisors(n::Int)
 end
 
 """
-make_zetas(p::Int, m::Int = 36)
+make_zetas_prim(p::Int, m::Int = 36)
 
 Compute the minimal polynomial of the root ``ζ_{p^d-1}`` for 
 all divisor ``d`` of `m`.
 """
-function make_zetas(p::Int, m::Int = 36)
+function make_zetas_prim(p::Int, m::Int = 36)
     k, x = FiniteField(p, m, "x")
     y = gen(k)
     while !is_primitive(y)
