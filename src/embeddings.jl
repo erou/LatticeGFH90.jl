@@ -19,6 +19,7 @@ function embed(K::FqNmodFiniteField, L::FqNmodFiniteField)
 
     if haskey(H90_ELEMENTS, (p, m))
         hm = H90_ELEMENTS[(p, m)]
+        Am = parent(hm)
     else
         Am = tensor_algebra(L)
         hm = solve_h90(Am)
@@ -27,6 +28,7 @@ function embed(K::FqNmodFiniteField, L::FqNmodFiniteField)
 
     if haskey(H90_ELEMENTS, (p, l))
         hl = H90_ELEMENTS[(p, l)]
+        Al = parent(hl)
     else
         Al = tensor_algebra(K)
         hl = solve_h90(Al)

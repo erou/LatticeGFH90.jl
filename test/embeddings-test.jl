@@ -6,6 +6,7 @@ function test_embeddings()
     # Creation of the finite fields
 
     p = 11
+    make_zetas(p)
     
     k2, x2 = FiniteField(p, 2, "x2")
     k3, x3 = FiniteField(p, 3, "x3")

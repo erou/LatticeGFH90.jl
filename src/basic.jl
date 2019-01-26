@@ -6,7 +6,7 @@
 
 export make_zetas
 
-const H90_ELEMENTS = Dict{Tuple{Int, Int}, fq_nmod_poly}()
+const H90_ELEMENTS = Dict{Tuple{Int, Int}, tensor_element}()
 const EMBEDDINGS = Dict{Tuple{Int, Int, Int}, Any}() # Any for the "embedding" type
 const ZETAS = Dict{Tuple{Int, Int}, nmod_poly}()
 
@@ -88,7 +88,6 @@ function nth_root(x::fq_nmod, n::Int)
     return - coeff(L, 0)
 end
 
-# NOT WORKING FOR NOW
 """
     complete_zeta(A::tensor_algebra)
 
@@ -127,7 +126,6 @@ function scalar(x::tensor_element)
     return s
 end
 
-
 """
     solve_h90(A::tensor_algebra)
 
@@ -140,7 +138,7 @@ The solution ``α ∈  A`` is such that
 function solve_h90(A::tensor_algebra)
     g = _solve_h90(A)
     l, a = degree(A), level(A)
-    c = scaler(g^l)
+    c = scalar(g^l)
     z = complete_zeta(A)^a # COMPLETE ZETA BUGGED FOR NOW!
     r = nth_root(c^-1 * z, l)
     return r * g
