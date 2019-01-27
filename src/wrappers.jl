@@ -26,13 +26,13 @@ function minpoly(x::fq_nmod)
     return result
 end
 
-#function nth_root(x::fq_nmod, n::Int)
-#    F = parent(x)
-#    y = F()
-#    ccall((:nth_root, :libembed), Nothing, (Ref{fq_nmod}, Ref{fq_nmod}, UInt,
-#          Ref{FqNmodFiniteField}), y, x, UInt(n), F)
-#    return y
-#end
+function nth_root2(x::fq_nmod, n::Int)
+    F = parent(x)
+    y = F()
+    ccall((:nth_root, :libembed), Nothing, (Ref{fq_nmod}, Ref{fq_nmod}, UInt,
+          Ref{FqNmodFiniteField}), y, x, UInt(n), F)
+    return y
+end
 
 function linfactor(x::fq_nmod_poly)
     R = parent(x)
