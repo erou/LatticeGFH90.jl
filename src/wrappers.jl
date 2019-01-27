@@ -60,3 +60,10 @@ function change_basis_direct(a::fq_nmod, g::fq_nmod)
           Ref{FqNmodFiniteField}), res, a, fromK, g, toL)
     return res
 end
+
+function import_conway(p::Int, d::Int)
+    poly = PolynomialRing(ResidueRing(ZZ, p), "T")[1]()
+    b = ccall((:import_conway, :libembed), Bool, (Ref{nmod_poly}, Ref{fmpz},
+              UInt), poly, ZZ(p), d)
+    return b, poly
+end

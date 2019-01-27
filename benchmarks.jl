@@ -8,13 +8,13 @@ function simple_bench(p, l)
     return level(A)
 end
 
-function bench_solve_h90(p, m)
+function bench_solve_h90(p, N)
 
     path = string("../benchmarks/solve_h90-", p, ".txt")
 
     io = open(path, "w+")
 
-    for j in 1:m
+    for j in 1:N
         if j%p == 0
             continue
         end
@@ -31,31 +31,44 @@ function bench_solve_h90(p, m)
     close(io)
 end
 
-function bench_embed(p, m)
+function bench_embed(p, N)
 
     path = string("../benchmarks/embed-", p, ".txt")
 
     io = open(path, "w+")
 
-    for j in 1:m
+    # Compute the H90 sol in A_l with l <= N
+    for j in 1:N
         if j%p == 0
             continue
         end
-        a = level(2*j, p)
+        a = level(j, p)
         if haskey(ZETAS, (p, a))
-            println(j)
             k, x = FiniteField(p, j, "x")
             A = tensor_algebra(k)
-            K, y = FiniteField(p, 2*j, "y")
-            B = tensor_algebra(K)
             h = solve_h90(A)
             H90_ELEMENTS[(p, j)] = h
-            g = solve_h90(B)
-            H90_ELEMENTS[(p, 2*j)] = g
-            t = @elapsed embed(k, K)
-            write(io, string(level(A), ",", level(B), ",", degree(A), ",", t, "\n"))
         end
     end
 
+    # Sort the A_l
+    degrees = sort!(Int[y for (x,y) in keys(H90_ELEMENTS)])
+    len = length(degrees)
+
+    # Make all the possible embeddings
+    for j in 1:len
+        for i in (j+1):len
+            l, m = degrees[j], degrees[i]
+            if m % l == 0
+                println(string(l, " ... ", m))
+                k, x = FiniteField(p, l, "x")
+                K, y = FiniteField(p, m, "y")
+                a, b = level(l, p), level(m, p)
+
+                t = @elapsed embed(k, K)
+                write(io, string(a, ",", l, ",", b, ",", m, ",", t, "\n"))
+            end
+        end
+    end
     close(io)
 end

@@ -59,10 +59,13 @@ function divisors(n::Int)
 end
 
 """
-make_zetas_prim(p::Int, m::Int = 36)
+    make_zetas_prim(p::Int, m::Int = 36)
 
 Compute the minimal polynomial of the root ``ζ_{p^d-1}`` for 
 all divisor ``d`` of `m`.
+
+# Note
+Take a **primitive element** at random.
 """
 function make_zetas_prim(p::Int, m::Int = 36)
     k, x = FiniteField(p, m, "x")
@@ -73,6 +76,21 @@ function make_zetas_prim(p::Int, m::Int = 36)
 
     for d in divisors(m)
         ZETAS[(p, d)] = minpoly(y^(divexact(ZZ(p)^m-1, ZZ(p)^d-1)))
+    end
+end
+
+"""
+    make_zetas_conway(p::Int, m::Int = 100)
+
+Compute the minimal polynomial of the root ``ζ_{p^d-1}`` for 
+all 1 <= d <= m for which we have a Conway polynomial.
+"""
+function make_zetas_conway(p::Int, m::Int = 100)
+    for j in 1:m
+        b, conw = import_conway(p, j)
+        if b
+            ZETAS[(p, j)] = conw
+        end
     end
 end
 
