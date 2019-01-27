@@ -200,3 +200,15 @@ function derive_emb(hl::tensor_element, HL::tensor_element)
     end
     return compute_emb(a, b)
 end
+
+"""
+    standard_polynomial(p, l)
+
+Compute the `l`-th standard polynomial in characteristic `p`.
+"""
+function standard_polynomial(p, l)
+    k, x = FiniteField(p, l, "x")
+    A = tensor_algebra(k)
+    h = solve_h90(A)
+    return minpoly(coeff(h, 0))
+end
