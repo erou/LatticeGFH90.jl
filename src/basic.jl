@@ -4,7 +4,7 @@
 #
 #######################################################################
 
-export make_zetas_prim, make_zetas_conw
+export make_zetas_prim, make_zetas_conway
 
 const H90_ELEMENTS = Dict{Tuple{Int, Int}, tensor_element}()
 const EMBEDDINGS = Dict{Tuple{Int, Int, Int}, Any}() # Any for the "embedding" type
