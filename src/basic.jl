@@ -4,7 +4,7 @@
 #
 #######################################################################
 
-export make_zetas_prim
+export make_zetas_prim, make_zetas_conw
 
 const H90_ELEMENTS = Dict{Tuple{Int, Int}, tensor_element}()
 const EMBEDDINGS = Dict{Tuple{Int, Int, Int}, Any}() # Any for the "embedding" type
@@ -157,7 +157,7 @@ function solve_h90(A::tensor_algebra)
     g = _solve_h90(A)
     l, a = degree(A), level(A)
     c = scalar(g^l)
-    z = complete_zeta(A)^a # COMPLETE ZETA BUGGED FOR NOW!
+    z = complete_zeta(A)^a
     r = nth_root(c^-1 * z, l)
     return r * g
 end
@@ -180,7 +180,7 @@ function compute_emb(a::fq_nmod, b::fq_nmod)
 end
 
 """
-derive_emb(hl::tensor_element, HL::tensor_element)
+    derive_emb(hl::tensor_element, HL::tensor_element)
 
 Compute the embedding sending the first coordinate of `hl` in the 
 base ``(1 ⊗ ζ_{l}^j)_j`` to the first coordinate of `HL` in the 

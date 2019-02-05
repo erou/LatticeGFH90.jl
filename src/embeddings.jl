@@ -4,6 +4,8 @@
 #
 ########################################################
 
+export embed
+
 """
     embed(K::FqNmodFiniteField, L::FqNmodFiniteField)
 

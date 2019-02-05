@@ -1,4 +1,4 @@
-#using LatticeGFH90
+using LatticeGFH90
 include("src/LatticeGFH90.jl")
 
 function simple_bench(p, l)
