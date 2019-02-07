@@ -67,3 +67,33 @@ function import_conway(p::Int, d::Int)
               UInt), poly, ZZ(p), d)
     return b, poly
 end
+
+function change_basis_prepare(toK::FqNmodFiniteField, g::fq_nmod)
+    fromL = parent(g)
+    deriv_inv = toK()
+    trace_one = fromL()
+    ccall((:change_basis_prepare, :libembed), Nothing, (Ref{fq_nmod},
+          Ref{fq_nmod}, Ref{fq_nmod}, Ref{FqNmodFiniteField},
+          Ref{FqNmodFiniteField}), deriv_inv, trace_one, g, fromL, toK)
+    return deriv_inv, trace_one
+end
+
+function change_basis_inverse_precomp(a::fq_nmod, g::fq_nmod,
+                                      deriv_inv::fq_nmod, trace_one::fq_nmod)
+    fromL = parent(a)
+    toK = parent(deriv_inv)
+    res = toK()
+    ccall((:change_basis_inverse_precomp, :libembed), Nothing, (Ref{fq_nmod},
+          Ref{fq_nmod}, Ref{fq_nmod}, Ref{FqNmodFiniteField},
+          Ref{FqNmodFiniteField}, Ref{fq_nmod}, Ref{fq_nmod}), res, a, g, fromL,
+          toK, deriv_inv, trace_one)
+    return res
+end
+
+function fit_length!(x::fq_nmod, n::Int)
+    ccall((:nmod_poly_fit_length, :libflint), Nothing, (Ref{fq_nmod}, Int), x, n)
+end
+
+function normalize!(x::fq_nmod)
+    ccall((:_nmod_poly_normalise, :libflint), Nothing, (Ref{fq_nmod},), x)
+end
