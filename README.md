@@ -15,27 +15,14 @@ based on Hilbert's theorem 90 and Allombert's algorithm.
 
 (v1.1) pkg> add "https://github.com/erou/LatticeGFH90.jl"
 
-julia> using LatticeGFH90
+julia> using Nemo, LatticeGFH90
 ```
 
-- You're *almost* done: the code relies on a library called `libembed`
+- You're done!
 
-### The C library `libembed`
+**Note:** this has not been tested on a wide variety of systems, if you
+encounter a problem during install, please tell us!
 
-- The sources are in [(yet) another repo](https://github.com/erou/gf-h90-lattice/tree/master/implementation)
-- Once you have the sources:
-```
-$ gcc -fPIC -c AE.c h90.c minpoly.c tensor.c nth-root.c linfactor.c basis_change.c
-$ gcc -shared AE.o h90.o minpoly.o tensor.o nth-root.o basis_change.o -o libembed.so
-```
-- Copy the headers and the shared library where you usually keep these things
-  (typically `/usr/include` and `/usr/lib`.
+## Testing the package
 
-If this does not work, it *might* be that you have to link `libembed` against the
-Flint version used by Nemo.
 
-## How to: experiment
-
-It is probably easier to experiment with the code by deleting the first and last
-line of the file `LatticeGFH90.jl` and by just `include("LatticeGFH90.jl")`, so
-that all functions are in the name space. 
