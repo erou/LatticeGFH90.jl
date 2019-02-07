@@ -8,7 +8,8 @@ cd(pkg_dir)
 # Cloning the repo
 
 run(`git clone https://github.com/erou/gf-h90-lattice.git`)
-run(`mv gf-h90-lattice/implementation deps`)
+mv(joinpath(pkg_dir, "gf-h90-lattice/implementation"), joinpath(pkg_dir,
+                                                                "deps/implementation"))
 rm(joinpath(pkg_dir, "gf-h90-lattice"), force = true, recursive = true)
 
 # Make libembed
