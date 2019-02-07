@@ -1,10 +1,15 @@
 module LatticeGFH90
 
-using Nemo, Primes, Markdown
+using Nemo, Primes, Libdl
 
 import Base: show, *, ^, ==
 
 import Nemo: parent, order, degree, coeff
+
+function __init__()
+    pkg_dir = dirname(dirname(@__FILE__))
+    push!(Libdl.DL_LOAD_PATH, joinpath(pkg_dir, "deps/implementation"))
+end
 
 #########################################################################
 #
