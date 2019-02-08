@@ -89,11 +89,3 @@ function change_basis_inverse_precomp(a::fq_nmod, g::fq_nmod,
           toK, deriv_inv, trace_one)
     return res
 end
-
-function fit_length!(x::fq_nmod, n::Int)
-    ccall((:nmod_poly_fit_length, :libflint), Nothing, (Ref{fq_nmod}, Int), x, n)
-end
-
-function normalize!(x::fq_nmod)
-    ccall((:_nmod_poly_normalise, :libflint), Nothing, (Ref{fq_nmod},), x)
-end

@@ -1,4 +1,4 @@
-module LatticeGFH90
+#module LatticeGFH90
 
 using Nemo, Primes, Libdl
 
@@ -43,4 +43,4 @@ include("basic.jl")
 
 include("embeddings.jl")
 
-end
+#end
