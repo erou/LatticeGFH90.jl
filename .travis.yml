@@ -12,6 +12,9 @@ matrix:
 notifications:
   - email: false
 script:
+  - julia -e 'using Pkg; Pkg.clone(pwd());'  
   - while sleep 30; do echo "still alive"; done &
-  - julia -e 'using Pkg; Pkg.add("https://github.com/erou/LatticeGFH90.jl");'
+  - julia -e 'using Pkg; Pkg.add("Nemo");'
+  - julia -e 'using Pkg; Pkg.build("Nemo")'
+  - julia -e 'using Pkg; Pkg.build("LatticeGFH90")'
   - julia -e 'using Pkg; Pkg.test("LatticeGFH90")'
