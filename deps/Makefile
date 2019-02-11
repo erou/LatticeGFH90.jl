@@ -5,7 +5,7 @@ LFLAGS = -lflint -lgmp -lm
 	$(CC) -fPIC -c $<
 
 libembed.so: AE.o h90.o minpoly.o tensor.o basis_change.o nth-root.o linfactor.o import_conway.o
-	gcc -shared $+ $(LFLAGS) -o libembed.so
+	gcc -shared -o libembed.so -L$(ARGS) $+ $(LFLAGS)
 
 AE.test.exe: AE.o test_AE.o
 

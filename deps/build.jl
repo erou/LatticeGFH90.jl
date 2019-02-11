@@ -1,12 +1,14 @@
-using Libdl
+using Libdl, Nemo
 
 old_dir = pwd()
 deps_dir = dirname(@__FILE__)
+nemo_dir = dirname(dirname(pathof(Nemo)))
+flint_dir = joinpath(nemo_dir, "local", "lib")
 
 # Make libembed
 
 cd(deps_dir)
-run(`make libembed.so`)
+run(`make libembed.so ARGS=$flint_dir`)
 
 # Add the path
 

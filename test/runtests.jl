@@ -1,4 +1,4 @@
-using LatticeGFH90, Test
+using Nemo, LatticeGFH90, Test
 
 include("embeddings-test.jl")
 
