@@ -25,4 +25,24 @@ encounter a problem during install, please tell us!
 
 ## Testing the package
 
+```
+julia> make_zetas_conway(5)
 
+julia> k3, x3 = FiniteField(5, 3, "x3")
+(Finite field of degree 3 over F_5, x3)
+
+julia> k6, x6 = FiniteField(5, 6, "x6")
+(Finite field of degree 6 over F_5, x6)
+
+julia> k12, x12 = FiniteField(5, 12, "x12")
+(Finite field of degree 12 over F_5, x12)
+
+julia> f = embed(k3, k6);
+
+julia> g = embed(k6, k12);
+
+julia> h = embed(k3, k12);
+
+julia> x = rand(k3); g(f(x)) == h(x)
+true
+```
