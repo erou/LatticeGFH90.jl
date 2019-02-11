@@ -11,3 +11,7 @@ matrix:
 
 notifications:
   - email: false
+script:
+  - while sleep 30; do echo "still alive"; done &
+  - julia -e 'using Pkg; Pkg.add("https://github.com/erou/LatticeGFH90.jl");'
+  - julia -e 'using Pkg; Pkg.test("LatticeGFH90")'
