@@ -2,10 +2,10 @@ CC = gcc
 LFLAGS = -lflint -lgmp -lm
 
 %.o: %.c
-	$(CC) -fPIC -I$(ARGS)-c $<
+	$(CC) -fPIC -I $(ARGS)-c $<
 
 libembed.so: AE.o h90.o minpoly.o tensor.o basis_change.o nth-root.o linfactor.o import_conway.o
-	gcc -shared -o libembed.so -L$(ARGS) $+ $(LFLAGS)
+	gcc -shared -o libembed.so -L $(ARGS) $+ $(LFLAGS)
 
 AE.test.exe: AE.o test_AE.o
 
