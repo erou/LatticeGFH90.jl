@@ -1,4 +1,5 @@
 name = "LatticeGFH90"
+uuid = "a9c5af51-36ba-5df4-9336-ae235e220ea4"
 
 [compat]
 julia = ">= 1.1"
