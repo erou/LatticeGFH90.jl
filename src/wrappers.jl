@@ -89,3 +89,25 @@ function change_basis_inverse_precomp(a::fq_nmod, g::fq_nmod,
           toK, deriv_inv, trace_one)
     return res
 end
+
+function change_basis_inverse_and_project(h::tensor_element, b::Int, g::fq_nmod,
+                                          toK::FqNmodFiniteField)
+    res = toK()
+    ccall((:change_basis_inverse_and_project, :libembed), Nothing,
+          (Ptr{Nothing}, Ptr{Nothing}, Int, Ref{fq_nmod},
+           Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), res.coeffs,
+          h.elem.coeffs, b, g, parent(g), toK)
+    return res
+end
+
+function change_basis_inverse_and_project_precomp(h::tensor_element, b::Int, g::fq_nmod,
+                                               deriv_inv::fq_nmod, trace_one::fq_nmod)
+    toK = parent(deriv_inv)
+    res = toK()
+    ccall((:change_basis_inverse_and_project_precomp, :libembed), Nothing,
+          (Ptr{Nothing}, Ptr{Nothing}, Int, Ref{fq_nmod},
+           Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}, Ref{fq_nmod},
+           Ref{fq_nmod}), res.coeffs, h.elem.coeffs, b, g, parent(g), toK, deriv_inv,
+           trace_one)
+    return res
+end
