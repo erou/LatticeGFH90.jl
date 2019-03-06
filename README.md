@@ -26,6 +26,8 @@ encounter a problem during install, please tell us!
 
 ## Testing the package
 
+A longer demo, with explanations, is available on Binder: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/erou/gfh90-binder/master?filepath=GFH90-demo.ipynb)
+
 ```
 julia> make_zetas_conway(5)
 
