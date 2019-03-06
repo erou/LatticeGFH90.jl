@@ -90,13 +90,28 @@ function change_basis_inverse_precomp(a::fq_nmod, g::fq_nmod,
     return res
 end
 
-function change_basis_inverse_and_project(h::tensor_element, b::Int, g::fq_nmod,
-                                          toK::FqNmodFiniteField)
-    res = toK()
+function _transpose(x::fq_nmod_poly, to::FqNmodFiniteField)
+    from = base_ring(parent(x))
+    y = PolynomialRing(to, "T")[1]()
+    ccall((:_transpose, :libembed), Nothing, (Ref{fq_nmod_poly},
+          Ref{fq_nmod_poly}, Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), y,
+         x, from, to)
+    return y
+end
+
+_transpose(x::tensor_element) = _transpose(x.elem, parent(x).R)
+
+function change_basis_inverse_and_project(HL::tensor_element, Al::tensor_algebra)
+
+    Am = parent(HL)
+    l, m = degree(Al), degree(Am)
+    res = left(Al)()
+    g = gen(right(Am))^(divexact(m, l))
     ccall((:change_basis_inverse_and_project, :libembed), Nothing,
           (Ptr{Nothing}, Ptr{Nothing}, Int, Ref{fq_nmod},
            Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), res.coeffs,
-          h.elem.coeffs, b, g, parent(g), toK)
+          _transpose(HL).coeffs, l, g, right(Am), right(Al))
+    res.length = degree(right(Al))
     return res
 end
 
@@ -104,10 +119,24 @@ function change_basis_inverse_and_project_precomp(h::tensor_element, b::Int, g::
                                                deriv_inv::fq_nmod, trace_one::fq_nmod)
     toK = parent(deriv_inv)
     res = toK()
-    ccall((:change_basis_inverse_and_project_precomp, :libembed), Nothing,
+    ccall((:change_basis_inverse_and_project_precomp_jl, :libembed), Nothing,
           (Ptr{Nothing}, Ptr{Nothing}, Int, Ref{fq_nmod},
            Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}, Ref{fq_nmod},
            Ref{fq_nmod}), res.coeffs, h.elem.coeffs, b, g, parent(g), toK, deriv_inv,
            trace_one)
+    res.length = degree(toK)
+    return res
+end
+
+function _change_basis_inverse_and_project(HL::tensor_element, Al::tensor_algebra)
+
+    Am = parent(HL)
+    l, m = degree(Al), degree(Am)
+    res = left(Al)()
+    g = gen(right(Am))^(divexact(m, l))
+    ccall((:change_basis_inverse_and_project_jl, :libembed), Nothing,
+          (Ref{fq_nmod}, Ref{fq_nmod_poly}, Int, Ref{fq_nmod},
+           Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), res,
+          _transpose(HL), l, g, right(Am), right(Al))
     return res
 end

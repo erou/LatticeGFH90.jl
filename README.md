@@ -1,5 +1,5 @@
 # LatticeGFH90.jl
-[![Build Status](https://travis-ci.org/erou/LatticeGFH90.jl.svg?branch=master)](https://travis-ci.org/erou/LatticeGFH90.jl)
+[![Build Status](https://travis-ci.org/erou/LatticeGFH90.jl.svg?branch=master)](https://travis-ci.org/erou/LatticeGFH90.jl)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/erou/gfh90-binder/master?filepath=GFH90-demo.ipynb)
 
 A [Julia](https://julialang.org/)/[Nemo](http://nemocas.org/) package to make lattices of compatibly embedded finite fields
 based on Hilbert's theorem 90 and Allombert's algorithm.

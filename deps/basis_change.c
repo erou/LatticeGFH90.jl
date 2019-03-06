@@ -1,5 +1,6 @@
 #include <flint/fmpz.h>
 #include <flint/nmod_vec.h>
+#include <flint/fq_nmod_poly.h>
 #include "basis_change.h"
 #include "minpoly.h"
 
@@ -208,7 +209,7 @@ void project_tr(mp_limb_t * res, const fq_nmod_t g,
 
 /*
  * Inputs:
- *  - an array `polys` of lenght `n` of element of `ctx_to`
+ *  - an array `polys` of length `n` of element of `ctx_to`
  *     expressed in `ctx_from`,
  *  - the canonical generator `g` of `ctx_to` expressed in `ctx_from`,
  *  - the values `to_deriv_inv` and `trace_one` precomputed 
@@ -239,7 +240,7 @@ void change_basis_inverse_and_project_precomp(mp_limb_t * res,
 
 /*
  * Inputs:
- *  - an array `polys` of lenght `n` of element of `ctx_to`
+ *  - an array `polys` of length `n` of element of `ctx_to`
  *     expressed in `ctx_from`,
  *  - the canonical generator `g` of `ctx_to` expressed in `ctx_from`.
  * 
@@ -263,4 +264,19 @@ void change_basis_inverse_and_project(mp_limb_t * res,
   
   fq_nmod_clear(trace_one, ctx_from);
   nmod_poly_clear(deriv_inv);
+}
+
+void change_basis_inverse_and_project_jl(fq_nmod_t res, const fq_nmod_poly_t polys,
+        slong n, const fq_nmod_t g, const fq_nmod_ctx_t ctx_from, const fq_nmod_ctx_t ctx_to) {
+    change_basis_inverse_and_project(res->coeffs, polys->coeffs, n, g, ctx_from, ctx_to);
+}
+
+void change_basis_inverse_and_project_precomp_jl(fq_nmod_t res,
+					      const fq_nmod_poly_t polys, slong n,
+					      const fq_nmod_t g, const fq_nmod_ctx_t ctx_from,
+					      const fq_nmod_ctx_t ctx_to,
+					      const fq_nmod_t to_deriv_inv,
+					      const fq_nmod_t trace_one) {
+    change_basis_inverse_and_project_precomp(res->coeffs, polys->coeffs, 
+            n, g, ctx_from, ctx_to, to_deriv_inv, trace_one);
 }

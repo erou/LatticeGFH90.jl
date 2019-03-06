@@ -87,10 +87,24 @@ void change_basis_inverse_and_project_precomp(mp_limb_t * res,
  * g.
  *
  * Note, the output `res` must be pre-allocated to length n.
+ *
  */
 void change_basis_inverse_and_project(mp_limb_t * res,
 				      const fq_nmod_struct * polys, slong n,
 				      const fq_nmod_t g, const fq_nmod_ctx_t ctx_from,
 				      const fq_nmod_ctx_t ctx_to);
+
+void change_basis_inverse_and_project_jl(fq_nmod_t res,
+				      const fq_nmod_poly_t polys, slong n,
+				      const fq_nmod_t g, const fq_nmod_ctx_t ctx_from,
+				      const fq_nmod_ctx_t ctx_to);
+
+void change_basis_inverse_and_project_precomp_jl(fq_nmod_t res,
+				      const fq_nmod_poly_t polys, slong n,
+                      const fq_nmod_t g, const fq_nmod_ctx_t ctx_from,
+				      const fq_nmod_ctx_t ctx_to,
+				      const fq_nmod_t to_deriv_inv,
+                      const fq_nmod_t trace_one);
+
 
 #endif
