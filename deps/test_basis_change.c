@@ -89,6 +89,7 @@ int main() {
     } else {
       flint_printf("!");
     }
+
     
     nmod_poly_clear(modulus);
     fq_nmod_clear(aaa, ctx);
@@ -99,6 +100,61 @@ int main() {
     fq_nmod_ctx_clear(ctx);
     fmpz_clear(p);
   }
+
+  /* Trying to make Luca's code fail:
+   *
+   * We work with p = 11 and F_p², we choose to represent
+   * F_p² by two different modulus. `ctx` = F_p(ζ_15) and
+   * `ctx_g` = F_p(ζ_3). That's why `g` = (ζ_15)^5 in what
+   * follows.
+   * 
+   */
+
+  flint_printf("\n\n ***\n\n");
+  mp_limb_t coeff;
+
+  // p = 11
+  fmpz_init(p);
+  fmpz_set_si(p, 11);
+
+  // modulus for `ctx`
+  nmod_poly_init(modulus, 11);
+  nmod_poly_set_coeff_ui(modulus, 2, 1);
+  nmod_poly_set_coeff_ui(modulus, 1, 5);
+  nmod_poly_set_coeff_ui(modulus, 0, 3);
+
+  // Computation of `g`
+  fq_nmod_ctx_init_modulus(ctx, modulus, "z15");
+  fq_nmod_init(g, ctx);
+  fq_nmod_zero(g, ctx);
+  nmod_poly_set_coeff_ui(g, 1, 1);
+  nmod_poly_set_coeff_ui(g, 0, 0);
+  fq_nmod_pow_ui(g, g, 5, ctx);
+
+  // Computation of `ctx_g`
+  minpoly(modulus, g, ctx);
+  fq_nmod_ctx_init_modulus(ctx_g, modulus, "z3");
+
+  // Changes of bases with `a` = `g`
+  fq_nmod_init(aa, ctx_g);
+  change_basis_inverse(aa, g, g, ctx, ctx_g);
+  change_basis_inverse_and_project(&coeff, g, 1, g, ctx, ctx_g);
+
+  // Tests
+  if (coeff != nmod_poly_get_coeff_ui(aa, 0)) {
+    flint_printf("Constant coefficients differ %d != %d",
+            coeff, nmod_poly_get_coeff_ui(aa, 0));
+  } else {
+    flint_printf("!");
+  }
+
+  fq_nmod_clear(aa, ctx_g);
+  fq_nmod_clear(g, ctx);
+  nmod_poly_clear(modulus);
+  fmpz_clear(p);
+  fq_nmod_ctx_clear(ctx);
+  fq_nmod_ctx_clear(ctx_g);
+  flint_printf("\n\n ***\n\n");
 
   flint_randclear(state);
   flint_printf("done\n");

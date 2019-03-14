@@ -2,6 +2,7 @@
 #define BASIS_CHANGE_H
 
 #include <flint/fq_nmod.h>
+#include <flint/fq_nmod_poly.h>
 
 /*
  * Given the image g of the canonical generator of ctx_to in ctx_from,

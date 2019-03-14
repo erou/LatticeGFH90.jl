@@ -132,11 +132,49 @@ function _change_basis_inverse_and_project(HL::tensor_element, Al::tensor_algebr
 
     Am = parent(HL)
     l, m = degree(Al), degree(Am)
-    res = left(Al)()
+    res = left(Am)()
     g = gen(right(Am))^(divexact(m, l))
     ccall((:change_basis_inverse_and_project_jl, :libembed), Nothing,
           (Ref{fq_nmod}, Ref{fq_nmod_poly}, Int, Ref{fq_nmod},
            Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), res,
-          _transpose(HL), l, g, right(Am), right(Al))
+          _transpose(HL), m, g, right(Am), right(Al))
     return res
+end
+
+function _test(a, g, ctx, ctx_g)
+
+    p::Int = characteristic(parent(g))
+    k = FiniteField(p, 1, "x1")[1]
+    res = k()
+    R, X = PolynomialRing(parent(g), "X")
+    A = R(a)
+
+    ccall((:change_basis_inverse_and_project_jl, :libembed), Nothing,
+          (Ref{fq_nmod}, Ref{fq_nmod_poly}, Int, Ref{fq_nmod},
+           Ref{FqNmodFiniteField}, Ref{FqNmodFiniteField}), res,
+          A, degree(A)+1, g, ctx, ctx_g)
+    return res
+end
+
+function _testall(p, l, m)
+
+    make_zetas_conway(p)
+    kl, xl = FiniteField(p, l, string("x", l))
+    km, xm = FiniteField(p, m, string("x", m))
+
+    Al = tensor_algebra(kl)
+    Am = tensor_algebra(km)
+
+    g = gen(right(Am))^divexact(m, l)
+    a = right(Am)()
+    for j in 0:degree(right(Al))-1
+        a += rand(0:p-1) * g^j
+    end
+
+    aa = _test(a, g, right(Am), right(Al))
+    b = _test(g, g, right(Am), right(Al))
+    aaa = change_basis_inverse(right(Al), a, g)
+    bb = change_basis_inverse(right(Al), g, g)
+
+    return a, aaa, aa, b, bb
 end

@@ -1,6 +1,5 @@
 #include <flint/fmpz.h>
 #include <flint/nmod_vec.h>
-#include <flint/fq_nmod_poly.h>
 #include "basis_change.h"
 #include "minpoly.h"
 
@@ -269,6 +268,8 @@ void change_basis_inverse_and_project(mp_limb_t * res,
 void change_basis_inverse_and_project_jl(fq_nmod_t res, const fq_nmod_poly_t polys,
         slong n, const fq_nmod_t g, const fq_nmod_ctx_t ctx_from, const fq_nmod_ctx_t ctx_to) {
     change_basis_inverse_and_project(res->coeffs, polys->coeffs, n, g, ctx_from, ctx_to);
+    res->length = res->alloc;
+    _nmod_poly_normalise(res);
 }
 
 void change_basis_inverse_and_project_precomp_jl(fq_nmod_t res,
@@ -279,4 +280,6 @@ void change_basis_inverse_and_project_precomp_jl(fq_nmod_t res,
 					      const fq_nmod_t trace_one) {
     change_basis_inverse_and_project_precomp(res->coeffs, polys->coeffs, 
             n, g, ctx_from, ctx_to, to_deriv_inv, trace_one);
+    res->length = res->alloc;
+    _nmod_poly_normalise(res);
 }
