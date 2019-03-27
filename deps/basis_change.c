@@ -199,9 +199,15 @@ void project_tr(mp_limb_t * res, const fq_nmod_t g,
   nmod_poly_compose_mod_brent_kung_preinv(gshift, gshift, g, ctx->modulus, ctx->inv);
   fq_nmod_mul(gshift, hprime, gshift, ctx);
   nmod_poly_reverse(gshift, gshift, d);
-  _nmod_poly_mullow(res, gshift->coeffs, gshift->length,
-		    ctx->inv->coeffs, ctx->inv->length, d, ctx->mod);
-
+  for (slong i = 0; i < d; i++) res[i] = 0;
+  if (gshift->length >= ctx->inv->length) {
+    _nmod_poly_mullow(res, gshift->coeffs, gshift->length,
+		      ctx->inv->coeffs, ctx->inv->length, d, ctx->mod);
+  } else {
+    _nmod_poly_mullow(res, ctx->inv->coeffs, ctx->inv->length,
+		      gshift->coeffs, gshift->length, d, ctx->mod);
+  }
+  
   fq_nmod_clear(hprime, ctx);
   fq_nmod_clear(gshift, minpoly);
 }
