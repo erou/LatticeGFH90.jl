@@ -23,3 +23,5 @@ We benchmark two routines:
     - the third column is the level of the algebra A_m
     - the fourth column is the degree of the algebra A_m
     - the fifth column is the time needed 
+  - the files end in `-p` where `p` is the characteristic that is used during
+    the benchmark

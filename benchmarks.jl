@@ -1,5 +1,4 @@
-#using LatticeGFH90
-#include("src/LatticeGFH90.jl")
+using LatticeGFH90
 
 function simple_bench(p, l)
     k, x = FiniteField(p, l, "x")
