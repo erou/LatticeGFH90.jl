@@ -187,19 +187,10 @@ base ``(1 ⊗ ζ_{l}^j)_j`` to the first coordinate of `HL` in the
 base ``(1 ⊗ ζ_{m}^(jm/l)_j``.
 """
 function derive_emb(hl::tensor_element, HL::tensor_element)
-    Al, Am = parent(hl), parent(HL)
-    l, m = degree(Al), degree(Am)
+    Al = parent(hl)
     a = coeff(hl, 0)
-    b = left(Am)()
-    zm = gen(right(Am))
-    g = zm^(divexact(m, l))
-    for j in 0:level(Am)-1
-        if coeff(HL, j) != 0
-            tmp = change_basis_inverse(right(Al), zm^j, g)
-            b += coeff(HL, j)*coeff(tmp, 0)
-        end
-    end
-    return compute_emb(a, b)
+    b = change_basis_inverse_and_project(HL, Al)
+   return compute_emb(a, b)
 end
 
 """
@@ -212,23 +203,4 @@ function standard_polynomial(p, l)
     A = tensor_algebra(k)
     h = solve_h90(A)
     return minpoly(coeff(h, 0))
-end
-
-"""
-Some test function.
-"""
-function test_fn(HL::tensor_element, Al::tensor_algebra)
-    Am = parent(HL)
-    l, m = degree(Al), degree(Am)
-    b = left(Am)()
-    zm = gen(right(Am))
-    g = zm^(divexact(m, l))
-
-    for j in 0:level(Am)-1
-        if coeff(HL, j) != 0
-            tmp = change_basis_inverse(right(Al), zm^j, g)
-            b += coeff(HL, j)*coeff(tmp, 0)
-        end
-    end
-    return b
 end

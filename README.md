@@ -49,3 +49,8 @@ julia> h = embed(k3, k12);
 julia> x = rand(k3); g(f(x)) == h(x)
 true
 ```
+
+## Benchmarks
+
+Some benchmarks of the code are available in the folder `benchmarks`, together
+with a `README` file to explain what exactly is benchmarked.

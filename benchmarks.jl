@@ -1,5 +1,5 @@
-using LatticeGFH90
-include("src/LatticeGFH90.jl")
+#using LatticeGFH90
+#include("src/LatticeGFH90.jl")
 
 function simple_bench(p, l)
     k, x = FiniteField(p, l, "x")
@@ -10,7 +10,7 @@ end
 
 function bench_solve_h90(p, N)
 
-    path = string("../benchmarks/solve_h90-", p, ".txt")
+    path = string("../benchmarks/new-solve_h90-", p, ".txt")
 
     io = open(path, "w+")
 
@@ -33,7 +33,7 @@ end
 
 function bench_embed(p, N)
 
-    path = string("../benchmarks/embed-", p, ".txt")
+    path = string("../benchmarks/new-embed-", p, ".txt")
 
     io = open(path, "w+")
 
@@ -75,10 +75,10 @@ end
 
 function bench_all(p, N)
 
-    path = string("../benchmarks/solve_h90-", p, ".txt")
+    path = string("../benchmarks/new-solve_h90-", p, ".txt")
     io = open(path, "w+")
 
-    path2 = string("../benchmarks/embed-", p, ".txt")
+    path2 = string("../benchmarks/new-embed-", p, ".txt")
     io2 = open(path2, "w+")
 
     # Compute the H90 sol in A_l with l <= N
