@@ -3,8 +3,8 @@ using Libdl, Nemo
 old_dir = pwd()
 deps_dir = dirname(@__FILE__)
 nemo_dir = dirname(dirname(pathof(Nemo)))
-flint_lib = joinpath(nemo_dir, "local", "lib")
-flint_headers = joinpath(nemo_dir, "local", "include")
+flint_lib = joinpath(nemo_dir, "deps", "usr", "lib")
+flint_headers = joinpath(nemo_dir, "deps", "usr", "include")
 
 # Make libembed
 
