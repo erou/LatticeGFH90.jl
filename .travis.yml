@@ -7,11 +7,10 @@ julia:
   - nightly
 matrix:
   allow_failures:
-    - julia: nightly
+    - os: osx
 
 notifications:
   - email: false
 script:
-  - while sleep 30; do echo "still alive"; done &
   - julia -e "using Pkg; if VERSION >= v\"1.1.0-rc1\"; Pkg.build(verbose=true); else Pkg.build(); end;"
   - julia -e 'using Pkg; Pkg.test("LatticeGFH90");'
