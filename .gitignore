@@ -7,3 +7,5 @@ deps/deps.jl
 *.o
 *.so
 *.exe
+old_timings
+experiments.jl
