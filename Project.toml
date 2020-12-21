@@ -5,6 +5,8 @@ uuid = "a9c5af51-36ba-5df4-9336-ae235e220ea4"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 Nemo = "2edaba10-b0f1-5616-af89-8c11ac63239a"
 Primes = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
+FLINT_jll = "e134572f-a0d5-539d-bddf-3cad8db41a82"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
