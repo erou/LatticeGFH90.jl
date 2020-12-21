@@ -1,10 +1,11 @@
-using Libdl, Nemo
+using Libdl, FLINT_jll, Nemo, Pkg.Artifacts
 
 old_dir = pwd()
 deps_dir = dirname(@__FILE__)
-nemo_dir = dirname(dirname(pathof(Nemo)))
-flint_lib = joinpath(nemo_dir, "deps", "usr", "lib")
-flint_headers = joinpath(nemo_dir, "deps", "usr", "include")
+flint_jll_dir = dirname(dirname(pathof(FLINT_jll)))
+flint_hash = artifact_hash("FLINT", joinpath(flint_jll_dir, "Artifacts.toml"))
+flint_lib = joinpath(artifact_path(flint_hash), "lib")
+flint_headers = joinpath(artifact_path(flint_hash), "include")
 
 # Make libembed
 
