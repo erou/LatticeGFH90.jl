@@ -1,6 +1,4 @@
-function test_embeddings()
-
-    print("embed... ")
+@testset "embed..." begin
 
     # Prelude 
     # Creation of the finite fields
@@ -71,6 +69,4 @@ function test_embeddings()
     @test f8_24(f4_8(x4)) == f4_24(x4)
     @test f4_8(f2_4(x2)) == f2_8(x2)
     @test f4_16(f2_4(x2)) == f2_16(x2)
-
-    println("PASS")
 end
