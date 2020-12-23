@@ -1,15 +1,23 @@
+using Nemo: FiniteField
 using LatticeGFH90
+using LatticeGFH90: level, ZETAS, H90_ELEMENTS, tensor_algebra, solve_h90,
+                    degree
+
+path_nemo = dirname(dirname(pathof(LatticeGFH90)))
+path_benchmark = joinpath(path_nemo, "benchmarks")
 
 function simple_bench(p, l)
+    make_zetas_conway(p)
     k, x = FiniteField(p, l, "x")
     @time A = tensor_algebra(k)
     @time h = solve_h90(A)
     return level(A)
 end
 
-function bench_solve_h90(p, N)
+function bench_solve_h90(p, N, s = "solve_h90")
 
-    path = string("../benchmarks/new-solve_h90-", p, ".txt")
+    make_zetas_conway(p)
+    path = joinpath(path_benchmark, string(s,"-", p, ".txt"))
 
     io = open(path, "w+")
 
@@ -21,7 +29,8 @@ function bench_solve_h90(p, N)
         if haskey(ZETAS, (p, a))
             println(j)
             k, x = FiniteField(p, j, "x")
-            A, t = (@timed tensor_algebra(k))[1:2]
+            res = @timed tensor_algebra(k)
+            A, t = res[1], res[2]
             t += @elapsed solve_h90(A)
             write(io, string(level(A), ",", degree(A), ",", t, "\n"))
         end
@@ -30,9 +39,10 @@ function bench_solve_h90(p, N)
     close(io)
 end
 
-function bench_embed(p, N)
+function bench_embed(p, N, s = "embed")
 
-    path = string("../benchmarks/new-embed-", p, ".txt")
+    make_zetas_conway(p)
+    path = joinpath(path_benchmark, string(s, "-", p, ".txt"))
 
     io = open(path, "w+")
 
@@ -74,10 +84,11 @@ end
 
 function bench_all(p, N)
 
-    path = string("../benchmarks/new-solve_h90-", p, ".txt")
+    make_zetas_conway(p)
+    path = joinpath(path_benchmark, string("solve-h90-", p, ".txt"))
     io = open(path, "w+")
 
-    path2 = string("../benchmarks/new-embed-", p, ".txt")
+    path2 = joinpath(path_benchmark, string("embed-", p, ".txt"))
     io2 = open(path2, "w+")
 
     # Compute the H90 sol in A_l with l <= N
@@ -90,8 +101,11 @@ function bench_all(p, N)
 
             println(j)
             k, x = FiniteField(p, j, "x")
-            A, t = (@timed tensor_algebra(k))[1:2]
-            h, u = (@timed solve_h90(A))[1:2]
+            res1 = @timed tensor_algebra(k)
+            A, t = res1[1], res1[2]
+
+            res2 = @timed solve_h90(A)
+            h, u = res2[1], res2[2] 
             write(io, string(level(A), ",", degree(A), ",", t+u, "\n"))
             H90_ELEMENTS[(p, j)] = h
         end

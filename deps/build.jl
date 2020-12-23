@@ -1,4 +1,4 @@
-using Libdl, FLINT_jll, Nemo, Pkg.Artifacts
+using Libdl, FLINT_jll, Pkg.Artifacts
 
 old_dir = pwd()
 deps_dir = dirname(@__FILE__)
